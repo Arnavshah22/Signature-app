@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signature App</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    #signatureCanvas {
+      border: 1px solid #000;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="signatureCanvas" width="400" height="200"></canvas>
+<button onclick="clearCanvas()">Clear Signature</button>
+<button onclick="saveSignature()">Save Signature</button>
+
+<script>
+  // Get the canvas and context
+  const canvas = document.getElementById('signatureCanvas');
+  const context = canvas.getContext('2d');
+
+  let isDrawing = false;
+
+  // Event listeners for drawing
+  canvas.addEventListener('mousedown', startDrawing);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stopDrawing);
+  canvas.addEventListener('mouseout', stopDrawing);
+
+  function startDrawing(e) {
+    isDrawing = true;
+    draw(e); // To start drawing from the current position
+  }
+
+  function draw(e) {
+    if (!isDrawing) return;
+
+    context.lineWidth = 2;
+    context.lineCap = 'round';
+    context.strokeStyle = '#000';
+
+    context.lineTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+    context.stroke();
+    context.beginPath();
+    context.moveTo(e.clientX - canvas.offsetLeft, e.clientY - canvas.offsetTop);
+  }
+
+  function stopDrawing() {
+    isDrawing = false;
+    context.beginPath();
+  }
+
+  // Function to clear the canvas
+  function clearCanvas() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // Function to save the signature as an image
+  function saveSignature() {
+    const signatureImage = canvas.toDataURL(); // Convert the canvas content to a data URL
+    // You can now send this data to a server, save it, or use it as needed.
+    console.log(signatureImage);
+    // In a real application, you might want to handle the data URL differently, such as sending it to a server or saving it.
+  }
+</script>
+
+</body>
+</html>
